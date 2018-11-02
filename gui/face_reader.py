@@ -5,6 +5,7 @@ from PyQt5.QtCore import pyqtSignal, QObject
 from collections import defaultdict
 
 FACE_IMG_SIZE = (126, 126)
+FACE_SIMILARITY_THRESHOLD = 0.36    # square of Euclidean norm
 
 
 class FaceReader(QObject):
@@ -41,6 +42,8 @@ class FaceReader(QObject):
         # Omit sqrt for speed
         distances = np.sum((self._centroids - descriptor) ** 2, axis=1)
         closest_centroid_idx = np.argmin(distances)
+        if distances[closest_centroid_idx] > FACE_SIMILARITY_THRESHOLD:
+            return -1
 
         return closest_centroid_idx
 
@@ -57,6 +60,9 @@ class FaceReader(QObject):
         for face_id, face_info in frame_faces_dict.items():
             face_img = self._get_photo_of_person(face_info, img)
             frame_faces[face_id] = face_img
+
+        if -1 in frame_faces:
+            del frame_faces[-1]
 
         return frame_faces
 
