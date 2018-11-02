@@ -9,7 +9,7 @@ logging.basicConfig(level=logging.DEBUG)
 
 
 class VideoPlayer(QThread):
-    _signal = pyqtSignal(int, object)
+    _update_frame_signal = pyqtSignal(int, object)
 
     def __init__(self, video_path):
         super().__init__()
@@ -20,11 +20,11 @@ class VideoPlayer(QThread):
         self._cap = None
 
     def add_subscriber(self, subscr_func):
-        self._signal.connect(subscr_func)
+        self._update_frame_signal.connect(subscr_func)
 
-    def notify_subscribers(self, frame_idx, img):
-        if self._signal is not None:
-            self._signal.emit(frame_idx, img)
+    def notify_frame_updates(self, frame_idx, img):
+        if self._update_frame_signal is not None:
+            self._update_frame_signal.emit(frame_idx, img)
 
     def play(self):
         if self._is_playing:
@@ -81,6 +81,6 @@ class VideoPlayer(QThread):
             img = frame[..., ::-1].copy()
 
             # Send to the controller
-            self.notify_subscribers(self._frame_idx, img)
+            self.notify_frame_updates(self._frame_idx, img)
 
             time.sleep(1. / 30.)

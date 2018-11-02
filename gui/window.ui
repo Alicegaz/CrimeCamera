@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1276</width>
-    <height>814</height>
+    <width>1306</width>
+    <height>745</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -20,54 +20,109 @@
    <attribute name="title">
     <string>Single Video</string>
    </attribute>
-   <widget class="QGraphicsView" name="graphicsView">
+   <widget class="QGroupBox" name="groupBox">
     <property name="geometry">
      <rect>
       <x>10</x>
       <y>10</y>
-      <width>644</width>
-      <height>484</height>
+      <width>661</width>
+      <height>681</height>
      </rect>
     </property>
+    <property name="title">
+     <string>Camera view</string>
+    </property>
+    <widget class="QPushButton" name="stopBtn">
+     <property name="geometry">
+      <rect>
+       <x>370</x>
+       <y>520</y>
+       <width>71</width>
+       <height>41</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Stop</string>
+     </property>
+    </widget>
+    <widget class="QGraphicsView" name="graphicsView">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>30</y>
+       <width>644</width>
+       <height>484</height>
+      </rect>
+     </property>
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="pauseBtn">
+     <property name="geometry">
+      <rect>
+       <x>290</x>
+       <y>520</y>
+       <width>71</width>
+       <height>41</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Pause</string>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="playBtn">
+     <property name="geometry">
+      <rect>
+       <x>210</x>
+       <y>520</y>
+       <width>71</width>
+       <height>41</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Play</string>
+     </property>
+    </widget>
    </widget>
-   <widget class="QPushButton" name="playBtn">
+   <widget class="QGroupBox" name="groupBox_2">
     <property name="geometry">
      <rect>
-      <x>210</x>
-      <y>500</y>
-      <width>71</width>
-      <height>41</height>
+      <x>680</x>
+      <y>10</y>
+      <width>611</width>
+      <height>681</height>
      </rect>
     </property>
-    <property name="text">
-     <string>Play</string>
+    <property name="title">
+     <string>Faces pool</string>
     </property>
-   </widget>
-   <widget class="QPushButton" name="pauseBtn">
-    <property name="geometry">
-     <rect>
-      <x>290</x>
-      <y>500</y>
-      <width>71</width>
-      <height>41</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Pause</string>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="stopBtn">
-    <property name="geometry">
-     <rect>
-      <x>370</x>
-      <y>500</y>
-      <width>71</width>
-      <height>41</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Stop</string>
-    </property>
+    <widget class="QScrollArea" name="facePoolsScrollArea">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>40</y>
+       <width>591</width>
+       <height>631</height>
+      </rect>
+     </property>
+     <property name="widgetResizable">
+      <bool>true</bool>
+     </property>
+     <widget class="QWidget" name="scrollAreaWidgetContents_2">
+      <property name="geometry">
+       <rect>
+        <x>0</x>
+        <y>0</y>
+        <width>589</width>
+        <height>629</height>
+       </rect>
+      </property>
+     </widget>
+    </widget>
    </widget>
   </widget>
   <widget class="QWidget" name="tab">
