@@ -17,10 +17,15 @@ class SlotsHandler:
         self._ui.pauseBtn.clicked.connect(self.pause_video)
         self._ui.stopBtn.clicked.connect(self.stop_video)
 
+        self._ui.speedUp4.clicked.connect(lambda: self._system.update_playing_speed('4x'))
+        self._ui.speedUp2.clicked.connect(lambda: self._system.update_playing_speed('2x'))
+        self._ui.speedUp1.clicked.connect(lambda: self._system.update_playing_speed('1x'))
+        self._ui.slowDown2.clicked.connect(lambda: self._system.update_playing_speed('0.5x'))
+        self._ui.slowDown4.clicked.connect(lambda: self._system.update_playing_speed('0.25x'))
+
         # Face pools
         self._face_pools_container = FacePoolsContainer()
         self._ui.facePoolsScrollArea.setWidget(self._face_pools_container.scrollWidget)
-        # self._ui.addWidgetBtn.clicked.connect(self.add_facepool)
 
         self._system.subscribe_on_video(self.update_video_frame)
         self._system.subscribe_on_pool_faces(self._face_pools_container.update_pools)
@@ -43,6 +48,3 @@ class SlotsHandler:
         logging.info('Got image to show with frame idx: {}'.format(frame_idx))
         scene = cvt_numpy_to_qscene(img)
         self._ui.graphicsView.setScene(scene)
-
-    # def add_facepool(self):
-    #     self._ui.scrollLayout.addWidget(FacePool())

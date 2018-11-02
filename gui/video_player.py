@@ -7,6 +7,8 @@ import time
 
 logging.basicConfig(level=logging.DEBUG)
 
+DEFAULT_FRAME_SLEEP = 1. / 30.
+
 
 class VideoPlayer(QThread):
     _update_frame_signal = pyqtSignal(int, object)
@@ -18,6 +20,7 @@ class VideoPlayer(QThread):
         self._is_playing = False
         self._frame_idx = 0
         self._cap = None
+        self._frame_sleep = DEFAULT_FRAME_SLEEP
 
     def add_subscriber(self, subscr_func):
         self._update_frame_signal.connect(subscr_func)
@@ -64,6 +67,18 @@ class VideoPlayer(QThread):
 
         return True
 
+    def update_frame_sleep(self, speed_up):
+        if speed_up == '4x':
+            self._frame_sleep = DEFAULT_FRAME_SLEEP / 4.
+        elif speed_up == '2x':
+            self._frame_sleep = DEFAULT_FRAME_SLEEP / 2.
+        elif speed_up == '0.5x':
+            self._frame_sleep = DEFAULT_FRAME_SLEEP * 2.
+        elif speed_up == '0.25x':
+            self._frame_sleep = DEFAULT_FRAME_SLEEP * 4.
+        else:
+            self._frame_sleep = DEFAULT_FRAME_SLEEP
+
     def run(self):
         is_opened = self.open_video_capture()
         if not is_opened:
@@ -83,4 +98,4 @@ class VideoPlayer(QThread):
             # Send to the controller
             self.notify_frame_updates(self._frame_idx, img)
 
-            time.sleep(1. / 30.)
+            time.sleep(self._frame_sleep)
