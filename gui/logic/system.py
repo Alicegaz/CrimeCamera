@@ -1,35 +1,24 @@
 from logic.video_player import VideoPlayer
 from logic.face_reader import FaceReader
 
+import json
+
 VIDEO_PATH = '../data/faces/detected_faces4.mp4'
 FACES_DUMP_PATH = '../descriptors/faces4.npy'
 FACES_CENTROIDS_PATH = '../descriptors/faces3_centroids.npy'
-
-PATHS_CONFIG = [
-    ('../data/faces/detected_faces4.mp4',
-     '../descriptors/faces4.npy',
-     '../descriptors/faces3_centroids.npy'),
-    ('../data/faces/detected_faces1.mp4',
-     '../descriptors/faces1.npy',
-     '../descriptors/faces1_centroids.npy'),
-    ('../data/faces/detected_faces2.mp4',
-     '../descriptors/faces2.npy',
-     '../descriptors/faces2_centroids.npy'),
-    ('../data/faces/detected_faces3.mp4',
-     '../descriptors/faces3.npy',
-     '../descriptors/faces3_centroids.npy')
-]
-
+PATH_TO_FACES_DATABASE = './logic/database_config.json'
 DEFAULT_VIDEO_IDX = 0
 
 
 class System:
     def __init__(self):
-        self._video_player = VideoPlayer(PATHS_CONFIG[DEFAULT_VIDEO_IDX][0])
-        self._face_reader = FaceReader(PATHS_CONFIG[DEFAULT_VIDEO_IDX][1],
-                                       PATHS_CONFIG[DEFAULT_VIDEO_IDX][2])
+        self._faces_db, db_size = self._load_faces_database(PATH_TO_FACES_DATABASE)
+
+        self._video_player = VideoPlayer(self._faces_db['video_paths'][DEFAULT_VIDEO_IDX])
+        self._face_reader = FaceReader(self._faces_db['faces_descriptors'][DEFAULT_VIDEO_IDX],
+                                       self._faces_db['faces_centroids'][DEFAULT_VIDEO_IDX])
         self._cur_video = DEFAULT_VIDEO_IDX
-        self._n_videos = len(PATHS_CONFIG)
+        self._n_videos = db_size
 
         self._subscribers_on_video = []
         self._subscribers_on_pool_faces = []
@@ -63,9 +52,9 @@ class System:
 
     def play_another_video(self, video_idx):
         self._video_player.stop()
-        self._video_player = VideoPlayer(PATHS_CONFIG[video_idx][0])
-        self._face_reader = FaceReader(PATHS_CONFIG[video_idx][1],
-                                       PATHS_CONFIG[video_idx][2])
+        self._video_player = VideoPlayer(self._faces_db['video_paths'][video_idx])
+        self._face_reader = FaceReader(self._faces_db['faces_descriptors'][video_idx],
+                                       self._faces_db['faces_centroids'][video_idx])
         for subscr_func in self._subscribers_on_video:
             self._apply_subscription_on_video(subscr_func)
         for subscr_func in self._subscribers_on_pool_faces:
@@ -80,3 +69,11 @@ class System:
     def prev_video(self):
         self._cur_video = self._n_videos - 1 if self._cur_video - 1 < 0 else self._cur_video - 1
         self.play_another_video(self._cur_video)
+
+    @staticmethod
+    def _load_faces_database(path_to_db):
+        with open(path_to_db, 'r') as f:
+            db = json.load(f)
+        db_size = len(db['faces_centroids'])
+
+        return db, db_size
