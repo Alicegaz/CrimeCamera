@@ -23,6 +23,9 @@ class SlotsHandler:
         self._ui.slowDown2.clicked.connect(lambda: self._system.update_playing_speed('0.5x'))
         self._ui.slowDown4.clicked.connect(lambda: self._system.update_playing_speed('0.25x'))
 
+        self._ui.prevVideoBtn.clicked.connect(self._system.prev_video)
+        self._ui.nextVideoBtn.clicked.connect(self._system.next_video)
+
         # Face pools
         self._face_pools_container = FacePoolsContainer()
         self._ui.facePoolsScrollArea.setWidget(self._face_pools_container.scrollWidget)

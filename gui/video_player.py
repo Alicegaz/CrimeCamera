@@ -79,6 +79,8 @@ class VideoPlayer(QThread):
         else:
             self._frame_sleep = DEFAULT_FRAME_SLEEP
 
+        logging.info('Video frame sleep is set to {} secs'.format(self._frame_sleep))
+
     def run(self):
         is_opened = self.open_video_capture()
         if not is_opened:
