@@ -16,5 +16,6 @@
     "../descriptors/faces1_centroids.npy",
     "../descriptors/faces2_centroids.npy",
     "../descriptors/faces3_centroids.npy"
-  ]
+  ],
+  "global_centroids": "../descriptors/all_descr_centroids.npy"
 }
