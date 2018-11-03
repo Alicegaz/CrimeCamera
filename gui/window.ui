@@ -35,14 +35,24 @@
     <widget class="QPushButton" name="stopBtn">
      <property name="geometry">
       <rect>
-       <x>150</x>
+       <x>110</x>
        <y>520</y>
-       <width>61</width>
+       <width>41</width>
        <height>41</height>
       </rect>
      </property>
      <property name="text">
-      <string>Stop</string>
+      <string/>
+     </property>
+     <property name="icon">
+      <iconset>
+       <normaloff>icons/stop-button.png</normaloff>icons/stop-button.png</iconset>
+     </property>
+     <property name="iconSize">
+      <size>
+       <width>24</width>
+       <height>24</height>
+      </size>
      </property>
     </widget>
     <widget class="QGraphicsView" name="graphicsView">
@@ -64,14 +74,24 @@
     <widget class="QPushButton" name="pauseBtn">
      <property name="geometry">
       <rect>
-       <x>80</x>
+       <x>60</x>
        <y>520</y>
-       <width>61</width>
+       <width>41</width>
        <height>41</height>
       </rect>
      </property>
      <property name="text">
-      <string>Pause</string>
+      <string/>
+     </property>
+     <property name="icon">
+      <iconset>
+       <normaloff>icons/pause-button.png</normaloff>icons/pause-button.png</iconset>
+     </property>
+     <property name="iconSize">
+      <size>
+       <width>24</width>
+       <height>24</height>
+      </size>
      </property>
     </widget>
     <widget class="QPushButton" name="playBtn">
@@ -79,15 +99,120 @@
       <rect>
        <x>10</x>
        <y>520</y>
-       <width>61</width>
+       <width>41</width>
        <height>41</height>
       </rect>
      </property>
      <property name="text">
-      <string>Play</string>
+      <string/>
+     </property>
+     <property name="icon">
+      <iconset>
+       <normaloff>icons/play-button.png</normaloff>icons/play-button.png</iconset>
+     </property>
+     <property name="iconSize">
+      <size>
+       <width>24</width>
+       <height>24</height>
+      </size>
      </property>
     </widget>
     <widget class="QPushButton" name="speedUp2">
+     <property name="geometry">
+      <rect>
+       <x>340</x>
+       <y>520</y>
+       <width>51</width>
+       <height>41</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <weight>75</weight>
+       <bold>true</bold>
+      </font>
+     </property>
+     <property name="text">
+      <string>2x</string>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="speedUp4">
+     <property name="geometry">
+      <rect>
+       <x>400</x>
+       <y>520</y>
+       <width>51</width>
+       <height>41</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <weight>75</weight>
+       <bold>true</bold>
+      </font>
+     </property>
+     <property name="text">
+      <string>4x</string>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="slowDown4">
+     <property name="geometry">
+      <rect>
+       <x>160</x>
+       <y>520</y>
+       <width>51</width>
+       <height>41</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <weight>75</weight>
+       <bold>true</bold>
+      </font>
+     </property>
+     <property name="text">
+      <string>0.25x</string>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="slowDown2">
+     <property name="geometry">
+      <rect>
+       <x>220</x>
+       <y>520</y>
+       <width>51</width>
+       <height>41</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <weight>75</weight>
+       <bold>true</bold>
+      </font>
+     </property>
+     <property name="text">
+      <string>0.5x</string>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="speedUp1">
+     <property name="geometry">
+      <rect>
+       <x>280</x>
+       <y>520</y>
+       <width>51</width>
+       <height>41</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <weight>75</weight>
+       <bold>true</bold>
+      </font>
+     </property>
+     <property name="text">
+      <string>1x</string>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="prevVideoBtn">
      <property name="geometry">
       <rect>
        <x>540</x>
@@ -97,10 +222,20 @@
       </rect>
      </property>
      <property name="text">
-      <string>2x</string>
+      <string/>
+     </property>
+     <property name="icon">
+      <iconset>
+       <normaloff>icons/backward-button.png</normaloff>icons/backward-button.png</iconset>
+     </property>
+     <property name="iconSize">
+      <size>
+       <width>24</width>
+       <height>24</height>
+      </size>
      </property>
     </widget>
-    <widget class="QPushButton" name="speedUp4">
+    <widget class="QPushButton" name="nextVideoBtn">
      <property name="geometry">
       <rect>
        <x>600</x>
@@ -110,72 +245,17 @@
       </rect>
      </property>
      <property name="text">
-      <string>4x</string>
+      <string/>
      </property>
-    </widget>
-    <widget class="QPushButton" name="slowDown4">
-     <property name="geometry">
-      <rect>
-       <x>360</x>
-       <y>520</y>
-       <width>51</width>
-       <height>41</height>
-      </rect>
+     <property name="icon">
+      <iconset>
+       <normaloff>icons/forward-button.png</normaloff>icons/forward-button.png</iconset>
      </property>
-     <property name="text">
-      <string>0.25x</string>
-     </property>
-    </widget>
-    <widget class="QPushButton" name="slowDown2">
-     <property name="geometry">
-      <rect>
-       <x>420</x>
-       <y>520</y>
-       <width>51</width>
-       <height>41</height>
-      </rect>
-     </property>
-     <property name="text">
-      <string>0.5x</string>
-     </property>
-    </widget>
-    <widget class="QPushButton" name="speedUp1">
-     <property name="geometry">
-      <rect>
-       <x>480</x>
-       <y>520</y>
-       <width>51</width>
-       <height>41</height>
-      </rect>
-     </property>
-     <property name="text">
-      <string>1x</string>
-     </property>
-    </widget>
-    <widget class="QPushButton" name="prevVideoBtn">
-     <property name="geometry">
-      <rect>
-       <x>220</x>
-       <y>520</y>
-       <width>51</width>
-       <height>41</height>
-      </rect>
-     </property>
-     <property name="text">
-      <string>Prev</string>
-     </property>
-    </widget>
-    <widget class="QPushButton" name="nextVideoBtn">
-     <property name="geometry">
-      <rect>
-       <x>280</x>
-       <y>520</y>
-       <width>51</width>
-       <height>41</height>
-      </rect>
-     </property>
-     <property name="text">
-      <string>Next</string>
+     <property name="iconSize">
+      <size>
+       <width>24</width>
+       <height>24</height>
+      </size>
      </property>
     </widget>
    </widget>
@@ -202,6 +282,9 @@
      </property>
      <property name="widgetResizable">
       <bool>true</bool>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
      </property>
      <widget class="QWidget" name="scrollAreaWidgetContents_2">
       <property name="geometry">
