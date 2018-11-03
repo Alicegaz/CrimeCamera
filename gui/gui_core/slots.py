@@ -1,4 +1,4 @@
-from gui_core.custom_widgets import FacePoolsContainer
+from gui_core.custom_widgets import FacePoolsContainer, DBFacesContainer
 from gui_core.gui_utils import cvt_numpy_to_qscene
 
 import logging
@@ -7,8 +7,9 @@ logging.basicConfig(level=logging.DEBUG)
 
 
 class SlotsHandler:
-    def __init__(self, ui, system):
+    def __init__(self, ui, tab_widget, system):
         self._ui = ui
+        self._tab_widget = tab_widget
         self._system = system
         self.init_ui()
 
@@ -33,6 +34,11 @@ class SlotsHandler:
         self._system.subscribe_on_video(self.update_video_frame)
         self._system.subscribe_on_pool_faces(self._face_pools_container.update_pools)
 
+        self._db_face_container = DBFacesContainer()
+        self._ui.facesScrollArea.setWidget(self._db_face_container.scrollWidget)
+        self._system.subscribe_on_db_face_adds(self._db_face_container.add_person)
+        self._tab_widget.currentChanged.connect(lambda i: self._system.load_db_face_imgs() if i == 1 else None)
+
         logging.info('Slots handler initialized')
 
     def play_video(self):
@@ -51,3 +57,6 @@ class SlotsHandler:
         logging.info('Got image to show with frame idx: {}'.format(frame_idx))
         scene = cvt_numpy_to_qscene(img)
         self._ui.graphicsView.setScene(scene)
+
+    def onChange(self, i):
+        print('tab index: {}'.format(i))
