@@ -1,4 +1,4 @@
-from utils import cvt_numpy_to_qscene
+from gui_core.gui_utils import cvt_numpy_to_qscene
 
 from PyQt5 import QtCore, QtGui, QtWidgets
 

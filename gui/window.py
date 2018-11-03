@@ -141,8 +141,8 @@ if __name__ == "__main__":
     TabWidget = QtWidgets.QTabWidget()
     ui = Ui_TabWidget()
     ui.setupUi(TabWidget)
-    from slots import SlotsHandler
-    from system import System
+    from gui_core.slots import SlotsHandler
+    from logic.system import System
 
     system = System()
     slots_handler = SlotsHandler(ui, system)

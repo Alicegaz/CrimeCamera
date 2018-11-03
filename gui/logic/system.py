@@ -1,5 +1,5 @@
-from video_player import VideoPlayer
-from face_reader import FaceReader
+from logic.video_player import VideoPlayer
+from logic.face_reader import FaceReader
 
 VIDEO_PATH = '../data/faces/detected_faces4.mp4'
 FACES_DUMP_PATH = '../descriptors/faces4.npy'
