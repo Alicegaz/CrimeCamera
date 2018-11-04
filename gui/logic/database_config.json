@@ -12,10 +12,10 @@
     "../descriptors/faces3.npy"
   ],
   "faces_centroids": [
-    "../descriptors/faces3_centroids.npy",
-    "../descriptors/faces1_centroids.npy",
-    "../descriptors/faces2_centroids.npy",
-    "../descriptors/faces3_centroids.npy"
+    "../descriptors/faces3_4centroids.npy",
+    "../descriptors/faces1_5centroids.npy",
+    "../descriptors/faces2_4centroids.npy",
+    "../descriptors/faces3_4centroids.npy"
   ],
-  "global_centroids": "../descriptors/all_descr_centroids.npy"
+  "global_centroids": "../descriptors/faces3_4centroids.npy"
 }

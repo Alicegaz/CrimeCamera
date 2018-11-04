@@ -4,9 +4,6 @@ from logic.face_searcher import FaceSearcher
 
 import json
 
-VIDEO_PATH = '../data/faces/detected_faces4.mp4'
-FACES_DUMP_PATH = '../descriptors/faces4.npy'
-FACES_CENTROIDS_PATH = '../descriptors/faces3_centroids.npy'
 PATH_TO_FACES_DATABASE = './logic/database_config.json'
 DEFAULT_VIDEO_IDX = 0
 
@@ -35,6 +32,9 @@ class System:
 
     def subscribe_on_db_face_adds(self, subscr_func):
         self._face_searcher.add_db_face_adds_subscriber(subscr_func)
+
+    def subscribe_on_key_frame_updates(self, subscr_func):
+        self._face_searcher.add_frame_updates_subscriber(subscr_func)
 
     def _apply_subscription_on_video(self, subscr_func):
         self._video_player.add_subscriber(subscr_func)
@@ -77,6 +77,9 @@ class System:
 
     def load_db_face_imgs(self):
         self._face_searcher.load_best_persons_photos()
+
+    def find_face(self, face_id):
+        self._face_searcher.find_face(face_id)
 
     @staticmethod
     def _load_faces_database_config(path_to_db):

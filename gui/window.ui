@@ -343,22 +343,58 @@
     <property name="geometry">
      <rect>
       <x>10</x>
-      <y>0</y>
+      <y>10</y>
       <width>861</width>
-      <height>801</height>
+      <height>791</height>
      </rect>
     </property>
     <property name="title">
      <string>Key frames view</string>
     </property>
+    <widget class="QScrollArea" name="keyFramesScrollArea">
+     <property name="geometry">
+      <rect>
+       <x>9</x>
+       <y>29</y>
+       <width>841</width>
+       <height>721</height>
+      </rect>
+     </property>
+     <property name="widgetResizable">
+      <bool>true</bool>
+     </property>
+     <widget class="QWidget" name="scrollAreaWidgetContents_3">
+      <property name="geometry">
+       <rect>
+        <x>0</x>
+        <y>0</y>
+        <width>839</width>
+        <height>719</height>
+       </rect>
+      </property>
+     </widget>
+    </widget>
+    <widget class="QPushButton" name="clearKeyFramesBtn">
+     <property name="geometry">
+      <rect>
+       <x>770</x>
+       <y>760</y>
+       <width>81</width>
+       <height>21</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Clear</string>
+     </property>
+    </widget>
    </widget>
    <widget class="QGroupBox" name="groupBox_4">
     <property name="geometry">
      <rect>
       <x>880</x>
-      <y>0</y>
+      <y>10</y>
       <width>411</width>
-      <height>801</height>
+      <height>791</height>
      </rect>
     </property>
     <property name="title">
@@ -370,7 +406,7 @@
        <x>9</x>
        <y>29</y>
        <width>391</width>
-       <height>761</height>
+       <height>751</height>
       </rect>
      </property>
      <property name="widgetResizable">
@@ -382,7 +418,7 @@
         <x>0</x>
         <y>0</y>
         <width>389</width>
-        <height>759</height>
+        <height>749</height>
        </rect>
       </property>
      </widget>

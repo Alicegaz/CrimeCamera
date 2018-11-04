@@ -8,12 +8,12 @@ from PyQt5.QtCore import pyqtSignal, QThread
 import logging
 
 # minimum number of frames that must be skipped in order to treat face_id as disappeared
-CONS_FRAME_IDX_THRESHOLD = 10
 FACE_IMG_SIZE = (126, 126)
+VIDEO_FRAME_SIZE = (214, 160)
 
 
 class FaceSearcher(QThread):
-    _frame_updates_signal = pyqtSignal(str, int)
+    _frame_updates_signal = pyqtSignal(str, int, object)
     _db_face_adds_signal = pyqtSignal(int, object)
 
     def __init__(self, fdb_conf):
@@ -26,9 +26,9 @@ class FaceSearcher(QThread):
     def add_frame_updates_subscriber(self, subscr_func):
         self._frame_updates_signal.connect(subscr_func)
 
-    def notify_frame_updates(self, video_path, frame_idx):
+    def notify_frame_updates(self, video_path, frame_idx, frame):
         if self._frame_updates_signal is not None:
-            self._frame_updates_signal.emit(video_path, frame_idx)
+            self._frame_updates_signal.emit(video_path, frame_idx, frame)
 
     def add_db_face_adds_subscriber(self, subscr_func):
         self._db_face_adds_signal.connect(subscr_func)
@@ -107,7 +107,8 @@ class FaceSearcher(QThread):
         self._find_face(self._face_id_to_search)
 
     def _find_face(self, face_id):
-        for video_path, local_fdb in self._face_db.items():
+        for video_path, local_fdb in self._face_db['local_fdbs'].items():
+            print('find_face. Reading video {}'.format(video_path))
             found_frames = []
             for cur_face_id, frame_idx in zip(
                     local_fdb['face_ids'], local_fdb['frame_idxs']):
@@ -115,22 +116,30 @@ class FaceSearcher(QThread):
                     continue
 
                 found_frames.append(frame_idx)
-            key_frames = self._filter_key_frames(found_frames)
+            key_frames, _ = self._filter_key_frames(found_frames)
             self._notify_key_frame_updates(video_path, key_frames)
 
     @staticmethod
-    def _filter_key_frames(found_frames):
-        found_frames = list(sorted(found_frames))
-
-        if len(found_frames) < 2:
+    def _filter_key_frames(found_frames, wsize=50, unseen_th=100, window_smoothness=30):
+        if len(found_frames) <= 1:
             return found_frames
 
-        filtered_frames = []
-        for i in range(1, len(found_frames)):
-            if found_frames[i] - found_frames[i - 1] > CONS_FRAME_IDX_THRESHOLD:
-                filtered_frames.append(found_frames[i])
+        found_frames = np.array(found_frames)
+        frame_diffs = np.diff(found_frames)
 
-        return filtered_frames
+        peaks = np.where(frame_diffs > unseen_th)[0]
+        peaks = np.hstack([[0], peaks])  # Treat first key frame as a peak
+
+        filtered_peaks = []
+        for peak in peaks:
+            window_diffs = frame_diffs[peak:peak + wsize]
+            # if the diff function in window is smooth enough
+            if (window_diffs < window_smoothness).sum() >= wsize - 1:
+                filtered_peaks.append(peak)
+
+        filtered_frames = list(found_frames[filtered_peaks])
+
+        return filtered_frames, filtered_peaks
 
     def _notify_key_frame_updates(self, video_path, key_frames):
         cap = cv2.VideoCapture(video_path)
@@ -145,6 +154,8 @@ class FaceSearcher(QThread):
                                 .format(key_frame, video_path))
                 continue
 
-            self.notify_frame_updates(video_path, key_frame)
+            frame = frame[..., ::-1].copy()
+            frame = cv2.resize(frame, VIDEO_FRAME_SIZE)
+            self.notify_frame_updates(video_path, key_frame, frame)
 
         cap.release()
