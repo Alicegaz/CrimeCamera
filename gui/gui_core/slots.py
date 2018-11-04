@@ -1,5 +1,6 @@
-from custom_widgets import FacePoolsContainer
-from utils import cvt_numpy_to_qscene
+from gui_core.custom_widgets import FacePoolsContainer,\
+    DBFacesContainer, KeyFramesHighContainer
+from gui_core.gui_utils import cvt_numpy_to_qscene
 
 import logging
 
@@ -7,8 +8,9 @@ logging.basicConfig(level=logging.DEBUG)
 
 
 class SlotsHandler:
-    def __init__(self, ui, system):
+    def __init__(self, ui, tab_widget, system):
         self._ui = ui
+        self._tab_widget = tab_widget
         self._system = system
         self.init_ui()
 
@@ -28,10 +30,24 @@ class SlotsHandler:
 
         # Face pools
         self._face_pools_container = FacePoolsContainer()
+        self._ui.prevVideoBtn.clicked.connect(self._face_pools_container.empty_container)
+        self._ui.nextVideoBtn.clicked.connect(self._face_pools_container.empty_container)
         self._ui.facePoolsScrollArea.setWidget(self._face_pools_container.scrollWidget)
 
         self._system.subscribe_on_video(self.update_video_frame)
         self._system.subscribe_on_pool_faces(self._face_pools_container.update_pools)
+
+        self._frames_high_container = KeyFramesHighContainer()
+        self._ui.keyFramesScrollArea.setWidget(self._frames_high_container.scrollWidget)
+        self._system.subscribe_on_key_frame_updates(self._frames_high_container.add_key_frame)
+
+        self._db_face_container = DBFacesContainer(self._frames_high_container)
+        self._ui.facesScrollArea.setWidget(self._db_face_container.scrollWidget)
+        self._system.subscribe_on_db_face_adds(self._db_face_container.add_person)
+        self._db_face_container.subscribe_on_face_group_click(self.on_face_group_click)
+        self._tab_widget.currentChanged.connect(lambda i: self._system.load_db_face_imgs() if i == 1 else None)
+
+        self._ui.clearKeyFramesBtn.clicked.connect(self._frames_high_container.empty_container)
 
         logging.info('Slots handler initialized')
 
@@ -48,6 +64,9 @@ class SlotsHandler:
         self._system.stop_video()
 
     def update_video_frame(self, frame_idx, img):
-        logging.info('Got image to show with frame idx: {}'.format(frame_idx))
         scene = cvt_numpy_to_qscene(img)
         self._ui.graphicsView.setScene(scene)
+
+    def on_face_group_click(self, face_id):
+        logging.info('Face group {} is clicked'.format(face_id))
+        self._system.find_face(face_id)

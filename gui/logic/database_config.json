@@ -1,0 +1,21 @@
+{
+  "video_paths": [
+    "../data/faces/detected_faces4.mp4",
+    "../data/faces/detected_faces1.mp4",
+    "../data/faces/detected_faces2.mp4",
+    "../data/faces/detected_faces3.mp4"
+  ],
+  "faces_descriptors": [
+    "../descriptors/faces4.npy",
+    "../descriptors/faces1.npy",
+    "../descriptors/faces2.npy",
+    "../descriptors/faces3.npy"
+  ],
+  "faces_centroids": [
+    "../descriptors/faces3_4centroids.npy",
+    "../descriptors/faces1_5centroids.npy",
+    "../descriptors/faces2_4centroids.npy",
+    "../descriptors/faces3_4centroids.npy"
+  ],
+  "global_centroids": "../descriptors/faces3_4centroids.npy"
+}
