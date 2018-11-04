@@ -1,10 +1,12 @@
 ### Prerequisites
+```
 cmake-3.11.4
 gmp-6.1.2
 HElib
 ntl-11.3.0
 docker
 SEAL_2.3.1
+```
 ### Installation
 ```
 git clone https://github.com/Alicegaz/CrimeCamera.git
