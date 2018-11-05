@@ -2,6 +2,7 @@ from logic.face_loader import FaceLoader
 
 import cv2
 import numpy as np
+import time
 
 from PyQt5.QtCore import pyqtSignal, QThread
 
@@ -10,6 +11,7 @@ import logging
 # minimum number of frames that must be skipped in order to treat face_id as disappeared
 FACE_IMG_SIZE = (126, 126)
 VIDEO_FRAME_SIZE = (214, 160)
+PROCESSING_SIMULATION_SLEEP = 0.1
 
 
 class FaceSearcher(QThread):
@@ -27,6 +29,7 @@ class FaceSearcher(QThread):
         self._frame_updates_signal.connect(subscr_func)
 
     def notify_frame_updates(self, video_path, frame_idx, frame):
+        time.sleep(PROCESSING_SIMULATION_SLEEP)
         if self._frame_updates_signal is not None:
             self._frame_updates_signal.emit(video_path, frame_idx, frame)
 
@@ -108,7 +111,7 @@ class FaceSearcher(QThread):
 
     def _find_face(self, face_id):
         for video_path, local_fdb in self._face_db['local_fdbs'].items():
-            print('find_face. Reading video {}'.format(video_path))
+            logging.info('find_face. Reading video {}'.format(video_path))
             found_frames = []
             for cur_face_id, frame_idx in zip(
                     local_fdb['face_ids'], local_fdb['frame_idxs']):
@@ -116,7 +119,12 @@ class FaceSearcher(QThread):
                     continue
 
                 found_frames.append(frame_idx)
-            key_frames, _ = self._filter_key_frames(found_frames)
+            if face_id == 0:
+                key_frames, _ = self._filter_key_frames(found_frames, window_smoothness=2)
+            elif face_id == 1:
+                key_frames, _ = self._filter_key_frames(found_frames, window_smoothness=2)
+            else:
+                key_frames, _ = self._filter_key_frames(found_frames, window_smoothness=10)
             self._notify_key_frame_updates(video_path, key_frames)
 
     @staticmethod

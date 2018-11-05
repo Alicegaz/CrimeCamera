@@ -14,7 +14,7 @@
    <string>CrimeCamera VMS</string>
   </property>
   <property name="currentIndex">
-   <number>1</number>
+   <number>0</number>
   </property>
   <property name="documentMode">
    <bool>false</bool>
@@ -355,9 +355,9 @@
      <property name="geometry">
       <rect>
        <x>9</x>
-       <y>29</y>
+       <y>59</y>
        <width>841</width>
-       <height>721</height>
+       <height>691</height>
       </rect>
      </property>
      <property name="widgetResizable">
@@ -369,7 +369,7 @@
         <x>0</x>
         <y>0</y>
         <width>839</width>
-        <height>719</height>
+        <height>689</height>
        </rect>
       </property>
      </widget>
@@ -385,6 +385,24 @@
      </property>
      <property name="text">
       <string>Clear</string>
+     </property>
+    </widget>
+    <widget class="QLabel" name="personLabel">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>30</y>
+       <width>841</width>
+       <height>21</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>14</pointsize>
+      </font>
+     </property>
+     <property name="text">
+      <string>Person ID</string>
      </property>
     </widget>
    </widget>

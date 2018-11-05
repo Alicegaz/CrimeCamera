@@ -129,7 +129,6 @@ class DBFacesContainer(QtWidgets.QWidget):
         self._fg_click_subscr_funcs = []
 
     def add_person(self, face_id, face_img):
-        print('Adding person {}'.format(face_id))
         face_group = DBFaceGroup(face_id, face_img)
         for subscr_func in self._fg_click_subscr_funcs:
             face_group.search_btn.clicked.connect(lambda: subscr_func(face_id))
@@ -152,7 +151,6 @@ class KeyFramesContainer(QtWidgets.QWidget):
         size_policy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Expanding,
                                             QtWidgets.QSizePolicy.Fixed)
         size_policy.setVerticalStretch(0)
-        self.setSizePolicy(size_policy)
 
         self.main_layout = QtWidgets.QHBoxLayout(self)
         self.setLayout(self.main_layout)
@@ -161,15 +159,8 @@ class KeyFramesContainer(QtWidgets.QWidget):
         self.scrollLayout.setAlignment(QtCore.Qt.AlignLeft)
         self.scrollWidget = QtWidgets.QWidget()
         self.scrollWidget.setLayout(self.scrollLayout)
-        # self.scrollWidget.setSizePolicy(size_policy)
-
-        # self.groupBox = QtWidgets.QGroupBox(parent)
-        # self.groupBox.setTitle('{}'.format(video_path))
-        # self.groupBox.setLayout(self.scrollLayout)
-        # self.main_layout.addWidget(self.groupBox)
 
         self.scrollArea = QtWidgets.QScrollArea(self)
-        # self.scrollArea.setGeometry(QtCore.QRect(200, 200, 591, 751))
         self.scrollArea.setWidgetResizable(True)
         self.scrollArea.setAlignment(QtCore.Qt.AlignLeading | QtCore.Qt.AlignLeft | QtCore.Qt.AlignTop)
         self.scrollArea.setWidget(self.scrollWidget)
@@ -177,8 +168,6 @@ class KeyFramesContainer(QtWidgets.QWidget):
         self.scrollArea.setSizePolicy(size_policy)
         self.scrollWidget.setSizePolicy(size_policy)
         self.main_layout.addWidget(self.scrollArea)
-
-        # self.setAlignment(QtCore.Qt.AlignLeading | QtCore.Qt.AlignLeft | QtCore.Qt.AlignTop)
 
         self._frame_group = {}
 
@@ -194,34 +183,24 @@ class KeyFramesContainer(QtWidgets.QWidget):
 
 
 class KeyFramesHighContainer(QtWidgets.QWidget):
-    def __init__(self, parent=None):
+    def __init__(self, person_label, parent=None):
         super(KeyFramesHighContainer, self).__init__(parent)
 
-        main_layout = QtWidgets.QVBoxLayout(parent)
-        main_layout.setAlignment(QtCore.Qt.AlignTop)
-        self.setLayout(main_layout)
-
-        self.person_label = QtWidgets.QLabel(self)
-        # self.person_label.setHidden(True)
-        font = QtGui.QFont()
-        font.setPointSize(12)
-        self.person_label.setFont(font)
-        main_layout.addWidget(self.person_label)
+        self.person_label = person_label
+        self.person_label.setHidden(True)
 
         self.scrollLayout = QtWidgets.QVBoxLayout()
         self.scrollLayout.setAlignment(QtCore.Qt.AlignTop)
         self.scrollWidget = QtWidgets.QWidget()
         self.scrollWidget.setLayout(self.scrollLayout)
-        main_layout.addWidget(self.scrollWidget)
 
         self._frame_groups = {}
 
     def update_person_label(self, face_id):
         self.person_label.setText('Person # {} appeared at:'.format(face_id))
-        # self.person_label.setHidden(False)
+        self.person_label.setHidden(False)
 
     def add_key_frame(self, video_path, frame_idx, frame):
-        print('Got notification. frame_idx: {}'.format(frame_idx))
         if video_path not in self._frame_groups:
             frame_group = KeyFramesContainer(video_path, self)
             self.scrollLayout.addWidget(frame_group)
@@ -233,4 +212,4 @@ class KeyFramesHighContainer(QtWidgets.QWidget):
         for i in reversed(range(self.scrollLayout.count())):
             self.scrollLayout.itemAt(i).widget().deleteLater()
         self._frame_groups = {}
-        # self.person_label.setHidden(True)
+        self.person_label.setHidden(True)
