@@ -160,7 +160,6 @@ def encrypt_db():
                 time_end1 = time.time()
                 total_encrypt_time+= (time_end1-time_start1)
                 serialized_list_new_protocol = pickle.dumps(ciphertext, protocol=-1)
-                print("Ciphertext ", str(ciphertext))
                 print("Serialized list size by the new protocol {} KB\n".format(asizeof.asizeof(serialized_list_new_protocol)/1024.0))
 
                 ############# JUST For DEBUG REMOVE  IMMITATE SEARCH
@@ -215,7 +214,9 @@ def search_immitation(df):
         (str)(1000 * (mean_search_time))))
     return mean_search_time, mean_comparison_times, graph, comparison_times
 
-
+###### THIS FUNCTION JUST PERFORMS THE COMPUTATION OF DISTANCES FROM THE QUERY VECTOR TO ALL OF THE VECTORS IN THE DB
+###### THE RESULT NEEDS TO BE STORED IN THE DB
+#TODO ADD 'dist' Storing to DB
 def search(person, df):
     p_id = person[0]
     descriptor = person[1]
@@ -228,9 +229,10 @@ def search(person, df):
         end_time = time.time()
         total = end_time - start_time
         graph.append(total)
-        if dist < 0.001:
-            print("Match found. For id - {} id - {} is a match".format(p_id, cand_id))
-            break
+        #### HERE COMES THE DECRYPTION, OTHERWISE WE COULD JUST RETURN THE ENCRYPTED RESULT OF THE DISTANCE COMPUTATION
+        #if dist < 0.001:
+        #    print("Match found. For id - {} id - {} is a match".format(p_id, cand_id))
+        #    break
     mean_dist_time = np.array(graph).mean()
     return graph, mean_dist_time
 
