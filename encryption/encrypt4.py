@@ -41,13 +41,23 @@ def unison_shuffled_copies(a, b):
     p = np.random.permutation(len(a))
     return a[p], b[p]
 
-def euclidean_dist_enc(evaluator, a, b):
+def euclidean_dist_enc(evaluator, a, b, batching=False, ev_keys=None):
     a = copy_cipher(a)
-    for i in range(DESC_SIZE):
-        evaluator.sub(a[i], b[i])
+    if type(a) is np.ndarray:
+        DESC_SIZE = a.shape[0]
+    elif type(a) is list and len(a)>0:
+        DESC_SIZE = len(a)
+
+        for i in range(DESC_SIZE):
+            evaluator.sub(a[i], b[i])
+    else:
+        evaluator.sub(a, b)
     evaluator.square(a)
+    if batching and ev_keys is not None:
+        evaluator.relinearize(a, ev_keys)
     encrypted_number = Ciphertext()
-    evaluator.add_many(a, encrypted_number)
+    if not batching:
+        evaluator.add_many(a, encrypted_number)
     return encrypted_number
 
 def euclidean_dist(a, b):
@@ -73,16 +83,22 @@ def config():
     # affects the security of the scheme
     # larger more secure and larger ciphertext size, computation slower
     # from 1024 to 32768
-    params.set_poly_modulus("1x^8192 + 1")
+    ##params.set_poly_modulus("1x^1024 + 1")
 
+    params.set_poly_modulus("1x^2048 + 1")
     # coefficient modulus determines the noise budget of the ciphertext
     # the bigger the more the budget and lower security -> increase the polynomial modulus
     # choosing parameters for polynomial modulus http://HomomorphicEncryption.org
-    params.set_coeff_modulus(seal.coeff_modulus_128(8192))
-
+    ###params.set_coeff_modulus(seal.coeff_modulus_128(8192))
+    params.set_coeff_modulus(seal.coeff_modulus_128(2048)) #plain_modulus = k*4096+1
+    #~ log2(coeff_modulus/plain_modulus) (bits)
     # plaintext modulus determines the size of the plaintext datatype, affects the noise budget in multiplication => keep the plaintext data type as small as possible
     #65537
-    params.set_plain_modulus(65537)
+    params.set_plain_modulus(12289)
+    #####For batching
+    ###params.set_plain_modulus(65537)
+    #params.set_plain_modulus(2049)
+    #params.set_plain_modulus(8192)
 
     # check the validity of the parameters set, performs and stores several important pre-computations
     context = SEALContext(params)
@@ -94,6 +110,8 @@ def config():
 
 
 def decompose_plain(slot_count, x, crtbuilder):
+    if type(x) is np.ndarray:
+        DESC_SIZE = x.shape[0]
     x = x.reshape(1, DESC_SIZE)
     zeros = np.zeros((1, slot_count), dtype=np.int32)
     zeros[:x.shape[0], :x.shape[1]] = x
@@ -103,16 +121,30 @@ def decompose_plain(slot_count, x, crtbuilder):
     crtbuilder.compose(pad_matrix, plain_matrix)
     return plain_matrix
 
-def encrypt_vec(params, encryptor, encoder, x):
-    x = x.flatten().tolist()
-    encrypted_rationals = []
-    for i in range(len(x)):
-        c = Ciphertext(params)
-        encrypted_rationals.append(c)
-        encryptor.encrypt(encoder.encode(x[i]), encrypted_rationals[i])
-    return encrypted_rationals
+def encrypt_vec(params, encryptor, encoder, x, crtbuilder=None):
+    if crtbuilder is None:
+        x = x.flatten().tolist()
+        encrypted_rationals = []
+        for i in range(len(x)):
+            c = Ciphertext(params)
+            encrypted_rationals.append(c)
+            encryptor.encrypt(encoder.encode(x[i]), encrypted_rationals[i])
+        return encrypted_rationals
+    else:
+        x = [int(i*100) for i in x]
+        print("Debug, list", x)
+        plain_matrix = pack_plain(crtbuilder, x)
+        encrypted_matrix = Ciphertext()
+        encryptor.encrypt(plain_matrix, encrypted_matrix)
+        return encrypted_matrix
 
-def keygen(context):
+
+def pack_plain(crtbuilder, x):
+    plain_matrix = Plaintext()
+    crtbuilder.compose(x, plain_matrix)
+    return plain_matrix
+
+def keygen(context, batching):
     #print("Generating secret/public keys: ")
     time_start = time.time()
     keygen = KeyGenerator(context)
@@ -120,13 +152,17 @@ def keygen(context):
     #print("Done in {} miliseconds".format((str)(1000 * (time_end - time_start))))
     public_key = keygen.public_key()
     secret_key = keygen.secret_key()
-    gal_keys = GaloisKeys()
-    keygen.generate_galois_keys(30, gal_keys)
+    #use moderate size decomposition bit count
+    if batching:
+        gal_keys = GaloisKeys()
+        keygen.generate_galois_keys(30, gal_keys)
+        #since we are going to do some multiplications we are going to relinearize
+        ev_keys = EvaluationKeys()
+        keygen.generate_evaluation_keys(30, ev_keys)
+        return public_key, secret_key, ev_keys, gal_keys
+    else: return public_key, secret_key
 
-    ev_keys = EvaluationKeys()
-    keygen.generate_evaluation_keys(30, ev_keys)
 
-    return public_key, secret_key
 
 def test2():
     img_path = '00001.jpg'
@@ -177,9 +213,16 @@ def test2():
         print("Noise budget {} bits".format(decryptor.invariant_noise_budget(encrypted_matrix)))
 
 def copy_cipher(a):
-    a_copy = []
-    for i in range(DESC_SIZE):
-        a_copy.append(Ciphertext(a[i]))
+    if type(a) not in [np.ndarray, list]:
+        a_copy = Ciphertext(a)
+    else:
+        a_copy = []
+        if type(a) is np.ndarray:
+            DESC_SIZE = a.shape[0]
+        elif type(a) is list:
+            DESC_SIZE = len(a)
+        for i in range(DESC_SIZE):
+            a_copy.append(Ciphertext(a[i]))
     return a_copy
 
 def test1():
