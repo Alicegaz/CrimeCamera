@@ -68,12 +68,14 @@ class System:
         self.play_video()
 
     def next_video(self):
+        video_seq = [0, 3, 1, 2]
         self._cur_video = (self._cur_video + 1) % self._n_videos
-        self.play_another_video(self._cur_video)
+        self.play_another_video(video_seq[self._cur_video])
 
     def prev_video(self):
+        video_seq = [0, 3, 1, 2]
         self._cur_video = self._n_videos - 1 if self._cur_video - 1 < 0 else self._cur_video - 1
-        self.play_another_video(self._cur_video)
+        self.play_another_video(video_seq[self._cur_video])
 
     def load_db_face_imgs(self):
         self._face_searcher.load_best_persons_photos()

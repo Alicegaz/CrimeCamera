@@ -32,12 +32,13 @@ class SlotsHandler:
         self._face_pools_container = FacePoolsContainer()
         self._ui.prevVideoBtn.clicked.connect(self._face_pools_container.empty_container)
         self._ui.nextVideoBtn.clicked.connect(self._face_pools_container.empty_container)
+        self._ui.stopBtn.clicked.connect(self._face_pools_container.empty_container)
         self._ui.facePoolsScrollArea.setWidget(self._face_pools_container.scrollWidget)
 
         self._system.subscribe_on_video(self.update_video_frame)
         self._system.subscribe_on_pool_faces(self._face_pools_container.update_pools)
 
-        self._frames_high_container = KeyFramesHighContainer()
+        self._frames_high_container = KeyFramesHighContainer(self._ui.personLabel)
         self._ui.keyFramesScrollArea.setWidget(self._frames_high_container.scrollWidget)
         self._system.subscribe_on_key_frame_updates(self._frames_high_container.add_key_frame)
 
