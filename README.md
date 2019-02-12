@@ -15,6 +15,9 @@ chmod +x ./download_models.sh
 
 ### Running
 From project root run:
+```bash
+cd gui/
+```
 ```python
 python gui/window.py
 ```
