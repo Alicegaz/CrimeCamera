@@ -12,6 +12,8 @@ git clone https://github.com/Alicegaz/CrimeCamera.git
 chmod +x ./download_models.sh
 ./download_models.sh
 ```
+Download data and additional descriptors data from [Google Drive](https://drive.google.com/drive/folders/17HKUUJT5S8u4idA5ChQagZxBefNmjqBN?usp=sharing).  
+Move the `data`'s content into existing `data` folder. Do the same with the `descriptors`s content.
 
 ### Running
 From project root run:
