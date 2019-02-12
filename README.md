@@ -6,9 +6,15 @@ The basic dependency is Anaconda, so [install it](https://www.anaconda.com/downl
 pip install opencv-python   # or https://docs.opencv.org/3.4/d7/d9f/tutorial_linux_install.html
 pip install dlib    # or http://dlib.net/compile.html
 ```
-### Start using
+### Getting started
 ```
 git clone https://github.com/Alicegaz/CrimeCamera.git
 chmod +x ./download_models.sh
 ./download_models.sh
+```
+
+### Running
+From project root run:
+```python
+python gui/window.py
 ```
